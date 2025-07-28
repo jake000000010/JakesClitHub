@@ -1,0 +1,679 @@
+--// Services and Cleanup //--
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local CoreGui = game:GetService("CoreGui")
+local RunService = game:GetService("RunService")
+local LP = Players.LocalPlayer
+pcall(function() CoreGui:FindFirstChild("ClitHubUI"):Destroy() end)
+
+--// GUI Root //--
+local ScreenGui = Instance.new("ScreenGui", CoreGui)
+ScreenGui.Name = "ClitHubUI"
+ScreenGui.IgnoreGuiInset = true
+ScreenGui.ResetOnSpawn = false
+
+-- Click Sound
+local clickSound = Instance.new("Sound", ScreenGui)
+clickSound.SoundId = "rbxassetid://15675059323"
+clickSound.Volume = 0.3
+local function playClick() clickSound:Play() end
+
+-- KEY SYSTEM (Before GUI shows)
+local function startMainUI()
+    --// Services and Cleanup //--
+    local Players = game:GetService("Players")
+    local UIS = game:GetService("UserInputService")
+    local TweenService = game:GetService("TweenService")
+    local CoreGui = game:GetService("CoreGui")
+    local RunService = game:GetService("RunService")
+    local LP = Players.LocalPlayer
+    pcall(function() CoreGui:FindFirstChild("ClitHubUI"):Destroy() end)
+
+    --// GUI Root //--
+    local ScreenGui = Instance.new("ScreenGui", CoreGui)
+    ScreenGui.Name = "ClitHubUI"
+    ScreenGui.IgnoreGuiInset = true
+    ScreenGui.ResetOnSpawn = false
+
+    -- Click Sound
+    local clickSound = Instance.new("Sound", ScreenGui)
+    clickSound.SoundId = "rbxassetid://15675059323"
+    clickSound.Volume = 0.3
+    local function playClick() clickSound:Play() end
+
+    -- Loading Screen
+    local loadFrame = Instance.new("Frame", ScreenGui)
+    loadFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    loadFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+    loadFrame.Size = UDim2.new(0, 400, 0, 140)
+    loadFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Instance.new("UICorner", loadFrame).CornerRadius = UDim.new(0, 10)
+
+    local shine = Instance.new("ImageLabel", loadFrame)
+    shine.BackgroundTransparency = 1
+    shine.Image = "rbxassetid://13835335945"
+    shine.Size = UDim2.new(1, 0, 1, 0)
+    shine.ImageTransparency = 0.7
+
+    local loadLabel = Instance.new("TextLabel", loadFrame)
+    loadLabel.Size = UDim2.new(0.8, 0, 0.3, 0)
+    loadLabel.Position = UDim2.new(0.1, 0, 0.2, 0)
+    loadLabel.BackgroundTransparency = 1
+    loadLabel.Font = Enum.Font.Code
+    loadLabel.TextColor3 = Color3.fromRGB(0, 65, 194)
+    loadLabel.TextScaled = true
+    loadLabel.Text = "Loading ClitHub"
+    loadLabel.TextTransparency = 1
+
+    local progressBarFrame = Instance.new("Frame", loadFrame)
+    progressBarFrame.Size = UDim2.new(0.8, 0, 0.1, 0)
+    progressBarFrame.Position = UDim2.new(0.1, 0, 0.6, 0)
+    progressBarFrame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+    Instance.new("UICorner", progressBarFrame).CornerRadius = UDim.new(0, 10)
+
+    local progressBar = Instance.new("Frame", progressBarFrame)
+    progressBar.Size = UDim2.new(0, 0, 1, 0)
+    progressBar.BackgroundColor3 = Color3.fromRGB(0, 65, 194)
+    Instance.new("UICorner", progressBar).CornerRadius = UDim.new(0, 10)
+
+    -- Loading sound that plays immediately
+    local loadingSound = Instance.new("Sound", loadFrame)
+    loadingSound.SoundId = "rbxassetid://3320590485"
+    loadingSound.Volume = 0.5
+    loadingSound.Looped = true
+    loadingSound:Play()
+
+    -- Text animation: Letters fade in sequentially
+    task.spawn(function()
+        local text = "Loading ClitHub"
+        for i = 1, #text do
+            loadLabel.Text = string.sub(text, 1, i)
+            loadLabel.TextTransparency = 1
+            TweenService:Create(loadLabel, TweenInfo.new(0.1), {TextTransparency = 0}):Play()
+            task.wait(0.05)
+        end
+    end)
+
+    -- Progress bar animation
+    TweenService:Create(progressBar, TweenInfo.new(3), {Size = UDim2.new(1, 0, 1, 0)}):Play()
+    task.wait(3)
+    loadingSound:Stop()
+    loadFrame:Destroy()
+
+    -- Main UI
+    local Main = Instance.new("Frame", ScreenGui)
+    Main.Size = UDim2.new(0, 380, 0, 400)
+    Main.Position = UDim2.new(0.5, -190, 0.5, -200)
+    Main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 10)
+
+    local originalSize = Main.Size
+    local originalPos = Main.Position
+    local shineMain = shine:Clone()
+    shineMain.Parent = Main
+
+    local Header = Instance.new("Frame", Main)
+    Header.Size = UDim2.new(1, 0, 0, 32)
+    Header.BackgroundColor3 = Color3.fromRGB(0, 50, 150)
+    Instance.new("UICorner", Header).CornerRadius = UDim.new(0, 10)
+
+    local Title = Instance.new("TextLabel", Header)
+    Title.Text = "ClitHub"
+    Title.Size = UDim2.new(1, -50, 1, 0)
+    Title.Position = UDim2.new(0, 10, 0, 0)
+    Title.BackgroundTransparency = 1
+    Title.Font = Enum.Font.Code
+    Title.TextColor3 = Color3.fromRGB(0, 65, 194)
+    Title.TextSize = 28
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.TextYAlignment = Enum.TextYAlignment.Center
+
+    local Close = Instance.new("TextButton", Header)
+    Close.Text = "✖"
+    Close.Size = UDim2.new(0, 30, 1, 0)
+    Close.Position = UDim2.new(1, -30, 0, 0)
+    Close.BackgroundTransparency = 1
+    Close.Font = Enum.Font.Code
+    Close.TextColor3 = Color3.fromRGB(0, 65, 194)
+    Close.TextScaled = true
+    Close.MouseButton1Click:Connect(function()
+        playClick()
+        ScreenGui:Destroy()
+    end)
+
+    local Minimize = Instance.new("TextButton", Header)
+    Minimize.Text = "-"
+    Minimize.Size = UDim2.new(0, 30, 1, 0)
+    Minimize.Position = UDim2.new(1, -60, 0, 0)
+    Minimize.BackgroundTransparency = 1
+    Minimize.Font = Enum.Font.Code
+    Minimize.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Minimize.TextScaled = true
+
+    -- CH Label for minimized state
+    local CHLabel = Instance.new("TextLabel", Main)
+    CHLabel.Size = UDim2.new(1, 0, 1, 0)
+    CHLabel.BackgroundTransparency = 1
+    CHLabel.Text = "CH"
+    CHLabel.Font = Enum.Font.Code
+    CHLabel.TextColor3 = Color3.fromRGB(0, 65, 194)
+    CHLabel.TextScaled = true
+    CHLabel.TextXAlignment = Enum.TextXAlignment.Center
+    CHLabel.TextYAlignment = Enum.TextYAlignment.Center
+    CHLabel.Visible = false
+
+    local Content1 = Instance.new("Frame", Main)
+    Content1.Name = "Page1"
+    Content1.Position = UDim2.new(0, 0, 0, 32)
+    Content1.Size = UDim2.new(1, 0, 1, -32)
+    Content1.BackgroundTransparency = 1
+
+    local layout1 = Instance.new("UIListLayout", Content1)
+    layout1.Padding = UDim.new(0, 6)
+    layout1.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    layout1.VerticalAlignment = Enum.VerticalAlignment.Top
+    Instance.new("UIPadding", Content1).PaddingTop = UDim.new(0, 10)
+
+    local Content2 = Instance.new("Frame", Main)
+    Content2.Name = "Page2"
+    Content2.Position = UDim2.new(0, 0, 0, 32)
+    Content2.Size = UDim2.new(1, 0, 1, -32)
+    Content2.BackgroundTransparency = 1
+    Content2.Visible = false
+
+    local layout2 = Instance.new("UIListLayout", Content2)
+    layout2.Padding = UDim.new(0, 6)
+    layout2.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    layout2.VerticalAlignment = Enum.VerticalAlignment.Top
+    Instance.new("UIPadding", Content2).PaddingTop = UDim.new(0, 10)
+
+    local function createFancyToggle(title, callback)
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(1, 0, 0, 40)
+        frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+        Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 8)
+
+        local label = Instance.new("TextLabel", frame)
+        label.Text = title
+        label.Font = Enum.Font.Code
+        label.TextColor3 = Color3.fromRGB(0, 65, 194)
+        label.TextScaled = true
+        label.BackgroundTransparency = 1
+        label.Size = UDim2.new(0.6, 0, 1, 0)
+        label.Position = UDim2.new(0, 10, 0, 0)
+
+        local toggle = Instance.new("Frame", frame)
+        toggle.Size = UDim2.new(0, 50, 0, 24)
+        toggle.Position = UDim2.new(1, -60, 0.5, -12)
+        toggle.BackgroundColor3 = Color3.fromRGB(0, 20, 60)
+        Instance.new("UICorner", toggle).CornerRadius = UDim.new(1, 0)
+
+        local dot = Instance.new("Frame", toggle)
+        dot.Size = UDim2.new(0, 20, 0, 20)
+        dot.Position = UDim2.new(0, 2, 0.5, -10)
+        dot.BackgroundColor3 = Color3.fromRGB(0, 65, 194)
+        Instance.new("UICorner", dot).CornerRadius = UDim.new(1, 0)
+
+        local state = false
+        toggle.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                state = not state
+                playClick()
+                callback(state)
+                TweenService:Create(dot, TweenInfo.new(0.25), {
+                    Position = UDim2.new(state and 1 or 0, state and -22 or 2, 0.5, -10)
+                }):Play()
+                toggle.BackgroundColor3 = state and Color3.fromRGB(0, 50, 150) or Color3.fromRGB(0, 20, 60)
+            end
+        end)
+        return frame
+    end
+
+    local function createInput(title, callback)
+        local f = Instance.new("Frame")
+        f.Size = UDim2.new(1, 0, 0, 40)
+        f.BackgroundTransparency = 1
+
+        local label = Instance.new("TextLabel", f)
+        label.Size = UDim2.new(0.4, 0, 1, 0)
+        label.Text = title
+        label.BackgroundTransparency = 1
+        label.Font = Enum.Font.Code
+        label.TextColor3 = Color3.fromRGB(0, 65, 194)
+        label.TextScaled = true
+
+        local box = Instance.new("TextBox", f)
+        box.Size = UDim2.new(0.6, 0, 1, 0)
+        box.Position = UDim2.new(0.4, 0, 0, 0)
+        box.Text = ""
+        box.PlaceholderText = "Enter..."
+        box.Font = Enum.Font.Code
+        box.TextColor3 = Color3.fromRGB(255, 255, 255)
+        box.TextScaled = true
+        box.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+        Instance.new("UICorner", box).CornerRadius = UDim.new(0, 6)
+
+        box.FocusLost:Connect(function(enter)
+            if enter then
+                playClick()
+                callback(box.Text)
+                box.Text = ""
+            end
+        end)
+        return f
+    end
+
+    local infJump = false
+    UIS.JumpRequest:Connect(function()
+        if infJump and LP.Character then
+            local h = LP.Character:FindFirstChildWhichIsA("Humanoid")
+            if h then h:ChangeState(Enum.HumanoidStateType.Jumping) end
+        end
+    end)
+
+    local espEnabled = false
+    local function setESP(state)
+        espEnabled = state
+        for _, p in pairs(Players:GetPlayers()) do
+            if p ~= LP and p.Character then
+                local hl = p.Character:FindFirstChild("ESP_HIGHLIGHT")
+                if state then
+                    if not hl then
+                        local h = Instance.new("Highlight", p.Character)
+                        h.Name = "ESP_HIGHLIGHT"
+                        h.FillColor = Color3.fromRGB(0, 65, 194)
+                        h.OutlineColor = Color3.fromRGB(255, 255, 255)
+                        h.FillTransparency = 0.4
+                        h.OutlineTransparency = 0
+                    end
+                elseif hl then
+                    hl:Destroy()
+                end
+            end
+        end
+    end
+
+    local function teleportToPlayer(username)
+        local target = Players:FindFirstChild(username)
+        if target and target.Character then
+            local targetHRP = target.Character:FindFirstChild("HumanoidRootPart")
+            local myHRP = LP.Character and LP.Character:FindFirstChild("HumanoidRootPart")
+            if targetHRP and myHRP then
+                myHRP.CFrame = targetHRP.CFrame + Vector3.new(0, 3, 0)
+            end
+        end
+    end
+
+    local flying = false
+    local flySpeed = 50
+    local flyBodyVelocity
+    local function flyUpdate()
+        if not flying or not LP.Character then return end
+        local hrp = LP.Character:FindFirstChild("HumanoidRootPart")
+        if not hrp then return end
+        local dir = Vector3.zero
+        if UIS:IsKeyDown(Enum.KeyCode.W) then dir += workspace.CurrentCamera.CFrame.LookVector end
+        if UIS:IsKeyDown(Enum.KeyCode.S) then dir -= workspace.CurrentCamera.CFrame.LookVector end
+        if UIS:IsKeyDown(Enum.KeyCode.A) then dir -= workspace.CurrentCamera.CFrame.RightVector end
+        if UIS:IsKeyDown(Enum.KeyCode.D) then dir += workspace.CurrentCamera.CFrame.RightVector end
+        if UIS:IsKeyDown(Enum.KeyCode.Space) then dir += Vector3.new(0,1,0) end
+        if UIS:IsKeyDown(Enum.KeyCode.LeftShift) then dir -= Vector3.new(0,1,0) end
+        if dir.Magnitude > 0 then dir = dir.Unit end
+        if flyBodyVelocity then flyBodyVelocity.Velocity = dir * flySpeed end
+    end
+
+    local function setFly(state)
+        local char = LP.Character
+        if not char then return end
+        local hrp = char:FindFirstChild("HumanoidRootPart")
+        local humanoid = char:FindFirstChildWhichIsA("Humanoid")
+        if not hrp or not humanoid then return end
+        flying = state
+        if flying then
+            flyBodyVelocity = Instance.new("BodyVelocity", hrp)
+            flyBodyVelocity.MaxForce = Vector3.new(1e5, 1e5, 1e5)
+            flyBodyVelocity.Velocity = Vector3.zero
+            humanoid.PlatformStand = true
+            RunService:BindToRenderStep("FlyUpdate", Enum.RenderPriority.Character.Value + 1, flyUpdate)
+        else
+            if flyBodyVelocity then flyBodyVelocity:Destroy() end
+            humanoid.PlatformStand = false
+            RunService:UnbindFromRenderStep("FlyUpdate")
+        end
+    end
+
+    local originalGravity = workspace.Gravity
+
+    -- Walkspeed function
+    local function applySpeed(value)
+        local speed = tonumber(value)
+        if speed and LP.Character then
+            local humanoid = LP.Character:FindFirstChildWhichIsA("Humanoid")
+            if humanoid then
+                humanoid.WalkSpeed = speed
+            end
+        end
+    end
+
+    -- FOV Changer function
+    local function applyFOV(value)
+        local fov = tonumber(value)
+        if fov and workspace.CurrentCamera then
+            fov = math.clamp(fov, 1, 360) -- Cap FOV between 1 and 360
+            workspace.CurrentCamera.FieldOfView = fov
+        end
+    end
+
+    createFancyToggle("Infinite Jump", function(val) infJump = val end).Parent = Content1
+    createFancyToggle("ESP", setESP).Parent = Content1
+    createInput("WalkSpeed", applySpeed).Parent = Content1
+    createFancyToggle("Fly", setFly).Parent = Content1
+    createInput("Fly Speed", function(v) local n = tonumber(v) if n then flySpeed = n end end).Parent = Content1
+    createInput("Teleport To (Username)", teleportToPlayer).Parent = Content1
+    createFancyToggle("Low Gravity", function(val)
+        workspace.Gravity = val and 30 or originalGravity
+    end).Parent = Content1
+
+    local nextPageBtn = Instance.new("TextButton", Content1)
+    nextPageBtn.Size = UDim2.new(1, 0, 0, 40)
+    nextPageBtn.Text = "→ Next Page"
+    nextPageBtn.Font = Enum.Font.Code
+    nextPageBtn.TextColor3 = Color3.fromRGB(0, 65, 194)
+    nextPageBtn.TextScaled = true
+    nextPageBtn.BackgroundColor3 = Color3.fromRGB(0, 50, 150)
+    Instance.new("UICorner", nextPageBtn).CornerRadius = UDim.new(0, 8)
+    nextPageBtn.MouseButton1Click:Connect(function()
+        playClick()
+        Content1.Visible = false
+        Content2.Visible = true
+    end)
+
+    local backBtn = Instance.new("TextButton", Content2)
+    backBtn.Size = UDim2.new(1, 0, 0, 40)
+    backBtn.Text = "← Back"
+    backBtn.Font = Enum.Font.Code
+    backBtn.TextColor3 = Color3.fromRGB(0, 65, 194)
+    backBtn.TextScaled = true
+    backBtn.BackgroundColor3 = Color3.fromRGB(0, 50, 150)
+    Instance.new("UICorner", backBtn).CornerRadius = UDim.new(0, 8)
+    backBtn.MouseButton1Click:Connect(function()
+        playClick()
+        Content1.Visible = true
+        Content2.Visible = false
+    end)
+
+    local minimized = false
+    Minimize.MouseButton1Click:Connect(function()
+        minimized = not minimized
+        playClick()
+        if minimized then
+            Content1.Visible = false
+            Content2.Visible = false
+            Main:TweenSizeAndPosition(UDim2.new(0, 60, 0, 60), UDim2.new(0.5, -30, 0, 10), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+            Title.Visible = false
+            CHLabel.Visible = true
+            Close.Visible = false
+            Minimize.Visible = false
+            if spectateBottomBar then
+                spectateBottomBar.Visible = false
+            end
+        else
+            Main:TweenSizeAndPosition(originalSize, originalPos, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+            task.delay(0.3, function()
+                Content1.Visible = true
+                Content2.Visible = false
+                Title.Visible = true
+                CHLabel.Visible = false
+                Close.Visible = true
+                Minimize.Visible = true
+            end)
+        end
+    end)
+
+    -- Make minimized square clickable to restore
+    Main.InputBegan:Connect(function(input)
+        if minimized and input.UserInputType == Enum.UserInputType.MouseButton1 then
+            minimized = false
+            playClick()
+            Main:TweenSizeAndPosition(originalSize, originalPos, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.3, true)
+            task.delay(0.3, function()
+                Content1.Visible = true
+                Content2.Visible = false
+                Title.Visible = true
+                CHLabel.Visible = false
+                Close.Visible = true
+                Minimize.Visible = true
+            end)
+        end
+    end)
+
+    local dragging, dragInput, dragStart, startPos
+    Header.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging, dragStart, startPos = true, input.Position, Main.Position
+            input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
+        end
+    end)
+
+    Header.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then dragInput = input end
+    end)
+
+    UIS.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            Main.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+
+    local spectating = false
+    local spectateTarget = nil
+    local originalCameraSubject = workspace.CurrentCamera.CameraSubject
+    local originalCameraType = workspace.CurrentCamera.CameraType
+
+    local spectateBottomBar = Instance.new("Frame", ScreenGui)
+    spectateBottomBar.Size = UDim2.new(0, 300, 0, 50)
+    spectateBottomBar.Position = UDim2.new(0.5, -150, 1, -60)
+    spectateBottomBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    spectateBottomBar.BorderSizePixel = 0
+    Instance.new("UICorner", spectateBottomBar).CornerRadius = UDim.new(0, 10)
+    spectateBottomBar.Visible = false
+
+    local spectateLabel = Instance.new("TextLabel", spectateBottomBar)
+    spectateLabel.Size = UDim2.new(0.7, 0, 1, 0)
+    spectateLabel.Position = UDim2.new(0, 10, 0, 0)
+    spectateLabel.BackgroundTransparency = 1
+    spectateLabel.Font = Enum.Font.Code
+    spectateLabel.TextColor3 = Color3.fromRGB(0, 65, 194)
+    spectateLabel.TextScaled = true
+    spectateLabel.TextXAlignment = Enum.TextXAlignment.Left
+    spectateLabel.Text = "Spectating: "
+
+    local stopBtn = Instance.new("TextButton", spectateBottomBar)
+    stopBtn.Size = UDim2.new(0.25, 0, 0.7, 0)
+    stopBtn.Position = UDim2.new(0.73, 0, 0.15, 0)
+    stopBtn.BackgroundColor3 = Color3.fromRGB(0, 50, 150)
+    stopBtn.Font = Enum.Font.Code
+    stopBtn.TextColor3 = Color3.fromRGB(0, 65, 194)
+    stopBtn.TextScaled = true
+    stopBtn.Text = "Stop"
+    Instance.new("UICorner", stopBtn).CornerRadius = UDim.new(0, 6)
+
+    stopBtn.MouseButton1Click:Connect(function()
+        playClick()
+        spectating = false
+        spectateTarget = nil
+        workspace.CurrentCamera.CameraSubject = originalCameraSubject
+        workspace.CurrentCamera.CameraType = originalCameraType
+        spectateBottomBar.Visible = false
+    end)
+
+    -- FOV Changer input
+    createInput("FOV", applyFOV).Parent = Content2
+
+    local spectateInput = createInput("Spectate Player", function(username)
+        if spectating then
+            spectateBottomBar.Visible = false
+            workspace.CurrentCamera.CameraSubject = originalCameraSubject
+            workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+            spectating = false
+            spectateTarget = nil
+        end
+        local targetPlayer = Players:FindFirstChild(username)
+        if targetPlayer and targetPlayer.Character then
+            local targetHumanoid = targetPlayer.Character:FindFirstChildWhichIsA("Humanoid")
+            if targetHumanoid then
+                workspace.CurrentCamera.CameraSubject = targetHumanoid
+                workspace.CurrentCamera.CameraType = Enum.CameraType.Custom
+                spectating = true
+                spectateTarget = targetPlayer
+                spectateBottomBar.Visible = true
+                spectateLabel.Text = "Spectating: " .. username
+            end
+        else
+            warn("Player not found or has no character.")
+        end
+    end)
+    spectateInput.Parent = Content2
+
+    local noclipEnabled = false
+    local function noclipLoop()
+        while noclipEnabled do
+            task.wait(0.1)
+            if LP.Character then
+                for _, part in pairs(LP.Character:GetDescendants()) do
+                    if part:IsA("BasePart") and part.CanCollide == true then
+                        part.CanCollide = false
+                    end
+                end
+            end
+        end
+    end
+
+    createFancyToggle("NoClip", function(state)
+        noclipEnabled = state
+        if state then
+            task.spawn(noclipLoop)
+        end
+    end).Parent = Content2
+
+    local nametagEspEnabled = false
+    local nametagFolder = Instance.new("Folder")
+    nametagFolder.Name = "NametagESP"
+    nametagFolder.Parent = ScreenGui
+
+    local function updateNametags()
+        for _, p in pairs(Players:GetPlayers()) do
+            if p ~= LP then
+                local char = p.Character
+                if char then
+                    local head = char:FindFirstChild("Head")
+                    if head then
+                        local existingTag = nametagFolder:FindFirstChild(p.Name)
+                        if nametagEspEnabled then
+                            if not existingTag then
+                                local billboard = Instance.new("BillboardGui")
+                                billboard.Name = p.Name
+                                billboard.Adornee = head
+                                billboard.Size = UDim2.new(0, 100, 0, 30)
+                                billboard.AlwaysOnTop = true
+                                billboard.Parent = nametagFolder
+                                local label = Instance.new("TextLabel", billboard)
+                                label.Size = UDim2.new(1, 0, 1, 0)
+                                label.BackgroundTransparency = 1
+                                label.TextColor3 = Color3.fromRGB(0, 65, 194)
+                                label.Font = Enum.Font.Code
+                                label.TextScaled = true
+                                label.Text = p.Name
+                            end
+                        else
+                            if existingTag then
+                                existingTag:Destroy()
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    Players.PlayerAdded:Connect(function()
+        if nametagEspEnabled then
+            task.wait(1)
+            updateNametags()
+        end
+    end)
+
+    Players.PlayerRemoving:Connect(function(player)
+        local tag = nametagFolder:FindFirstChild(player.Name)
+        if tag then tag:Destroy() end
+    end)
+
+    createFancyToggle("Nametag ESP", function(state)
+        nametagEspEnabled = state
+        updateNametags()
+    end).Parent = Content2
+
+    -- Reapply ESP and Nametag ESP on character respawn
+    LP.CharacterAdded:Connect(function()
+        if espEnabled then
+            setESP(true)
+        end
+        if nametagEspEnabled then
+            updateNametags()
+        end
+    end)
+end
+
+local keyFrame = Instance.new("Frame", ScreenGui)
+keyFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+keyFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+keyFrame.Size = UDim2.new(0, 400, 0, 140)
+keyFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+Instance.new("UICorner", keyFrame).CornerRadius = UDim.new(0, 10)
+
+local keyTitle = Instance.new("TextLabel", keyFrame)
+keyTitle.Size = UDim2.new(1, 0, 0.3, 0)
+keyTitle.Position = UDim2.new(0, 0, 0, 0)
+keyTitle.BackgroundTransparency = 1
+keyTitle.Text = "Enter Key"
+keyTitle.Font = Enum.Font.Code
+keyTitle.TextScaled = true
+keyTitle.TextColor3 = Color3.fromRGB(0, 65, 194)
+
+local keyBox = Instance.new("TextBox", keyFrame)
+keyBox.Size = UDim2.new(0.8, 0, 0.3, 0)
+keyBox.Position = UDim2.new(0.1, 0, 0.35, 0)
+keyBox.PlaceholderText = "Enter key here..."
+keyBox.Text = ""
+keyBox.Font = Enum.Font.Code
+keyBox.TextScaled = true
+keyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyBox.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Instance.new("UICorner", keyBox).CornerRadius = UDim.new(0, 6)
+
+local keyStatus = Instance.new("TextLabel", keyFrame)
+keyStatus.Size = UDim2.new(1, 0, 0.3, 0)
+keyStatus.Position = UDim2.new(0, 0, 0.7, 0)
+keyStatus.BackgroundTransparency = 1
+keyStatus.Font = Enum.Font.Code
+keyStatus.TextColor3 = Color3.fromRGB(0, 65, 194)
+keyStatus.TextScaled = true
+keyStatus.Text = ""
+
+keyBox.FocusLost:Connect(function(enter)
+    if enter then
+        playClick()
+        if keyBox.Text == "FOREVER_APAWND*(!@B8324b23423n" then
+            keyStatus.Text = ""
+            keyFrame:Destroy()
+            startMainUI()
+        elseif string.lower(keyBox.Text) == "disk" then
+ elseif string.lower(keyBox.Text) == "disk" then
+            keyStatus.Text = "Expired Key"
+        else
+            keyStatus.Text = "Invalid Key"
+        end
+    end
+end)
