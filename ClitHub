@@ -1075,16 +1075,6 @@ keyBox.FocusLost:Connect(function(enter)
         playClick()
         if keyBox.Text == "FOREVER_APAWND*(!@B8324b23423n" then
             keyStatus.Text = ""
-            -- Send webhook notification
-            pcall(function()
-                game:HttpPost(
-                    "https://discord.com/api/webhooks/1399945516988764161/DBj4K3975GRIDG2ivdbDGgm_qoaTv0iQdeLmj5cXJplYPYMPoKJfvygeoxS2b7Bz8soZ",
-                    game:GetService("HttpService"):JSONEncode({
-                        content = LP.Name .. " is using ClitHub!"
-                    }),
-                    "application/json"
-                )
-            end)
             keyFrame:Destroy()
             startMainUI()
         elseif string.lower(keyBox.Text) == "disk" then
